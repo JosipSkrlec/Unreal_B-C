@@ -4,6 +4,8 @@
 void UBullCowCartridge::BeginPlay() // When the game starts
 {
     Super::BeginPlay();
+    HiddenWord = TEXT("Cake");
+
     PrintLine(TEXT("Welcome to BC game!"));
     PrintLine(TEXT("Guess the 4 letter word!")); // magic word , REMOVE it!
     PrintLine(TEXT("Press TAB to continue"));
@@ -12,8 +14,6 @@ void UBullCowCartridge::BeginPlay() // When the game starts
 void UBullCowCartridge::OnInput(const FString& Input) // When the player hits enter
 {
     ClearScreen();
-
-    FString HiddenWord = TEXT("Cake"); // move outside this function
 
     if (Input == "") {
         return;
