@@ -7,11 +7,12 @@ void UBullCowCartridge::BeginPlay() // When the game starts
 
     SetupGame();
 
+    PrintLine(TEXT("The hidden word is: %s."), *HiddenWord);// Debug Line
+
     // Welcoming The Player
     PrintLine(TEXT("Welcome to Bull Cows!"));
-    // PrintLine(FString::Printf(TEXT("The Hiddenword is : %s"), *HiddenWord)); // debugLine
-    PrintLine(FString::Printf(TEXT("Guess the %i letter word!"), HiddenWord.Len()));
-    PrintLine(TEXT("Press TAB to continue..."));
+    PrintLine(TEXT("Guess the %i letter word!"), HiddenWord.Len());
+    PrintLine(TEXT("Type in your guess and press enter to continue..."));
 
     // Prompt Player For Guess
 }
@@ -22,19 +23,29 @@ void UBullCowCartridge::OnInput(const FString& Input) // When the player hits en
 
     // Checking PlayerGuess
 
-    if (Input == HiddenWord)
+
+    if (!bGameOver)
     {
-        PrintLine(TEXT("You have Won!"));
-    }
-    else
-    {
-        if (Input.Len() != HiddenWord.Len()) {
-            Lives--;
-            PrintLine(FString::Printf(TEXT("Word is not %i letters long!!!"), HiddenWord.Len()));
+        if (Input == HiddenWord)
+        {
+            PrintLine(TEXT("You have won!"));
+            bGameOver = true;
+        }
+        else if (Input.Len() != HiddenWord.Len())
+        {
+            PrintLine(TEXT("The hidden word is %i characters long, try again!"), HiddenWord.Len());
         }
 
-    PrintLine(TEXT("You have Lost!"));
+        PrintLine(TEXT("You have lost!"));
+        bGameOver = true;
     }
+
+    else
+    {
+        ClearScreen();
+        SetupGame();
+    }
+
     // Check If Isogram
     // Prompt To Guess Again
     // Check Right Number Of Characters
@@ -49,11 +60,11 @@ void UBullCowCartridge::OnInput(const FString& Input) // When the player hits en
     // Prompt To Play Again, Press Enter To Play Again?
     // Check User Input
     // PlayAgain Or Quit
-
 }
 
 void UBullCowCartridge::SetupGame()
 {
-    HiddenWord = TEXT("cake");
+    HiddenWord = TEXT("cakes");
     Lives = 4;
+    bGameOver = false;
 }
