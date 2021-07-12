@@ -109,4 +109,3 @@ bool UBullCowCartridge::IsIsogram(FString Word) const
     // Until we reach [Word.Len() -1].
     // if any are the same return false.   
 }
-{"mode":"full", "isActive" : false}
