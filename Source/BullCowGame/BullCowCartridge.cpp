@@ -12,10 +12,20 @@ void UBullCowCartridge::BeginPlay() // When the game starts
     // LECTURE 69. citanje iz TXT file-a
     const FString WordListPath = FPaths::ProjectContentDir() / TEXT("WordLists/HiddenWordList.txt");
     FFileHelper::LoadFileToStringArray(Words, *WordListPath);
-
+    
     SetupGame();
 
-    PrintLine(TEXT("The HiddenWord is: %s."), *HiddenWord);// Debug Line   
+    PrintLine(TEXT("The HiddenWord is: %s."), *HiddenWord);// Debug Line
+
+    // TESTS
+    PrintLine(TEXT("The number of possible words is: %i."), WordsFromHeader.Num());
+
+    for (int32 i = 0; i < 5; i++)
+    {
+        PrintLine(TEXT("word on place %i is %s"), i, *WordsFromHeader[i]);
+    }
+
+
 }
 
 void UBullCowCartridge::OnInput(const FString& Input) // When the player hits enter
