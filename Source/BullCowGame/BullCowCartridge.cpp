@@ -9,25 +9,19 @@ void UBullCowCartridge::BeginPlay() // When the game starts
 {
     Super::BeginPlay();
 
+    GetValidWords(WordsFromHeader);
+
     // LECTURE 69. citanje iz TXT file-a
     const FString WordListPath = FPaths::ProjectContentDir() / TEXT("WordLists/HiddenWordList.txt");
     FFileHelper::LoadFileToStringArray(Words, *WordListPath);
     
     SetupGame();
 
-    PrintLine(TEXT("The HiddenWord is: %s."), *HiddenWord);// Debug Line
-
-    // TESTS
-    PrintLine(TEXT("The number of possible words is: %i."), WordsFromHeader.Num());
-
-    for (int32 i = 0; i != 10; i++)
-    {
-        if (WordsFromHeader[i].Len() >= 4 && WordsFromHeader[i].Len() <= 8)
-        {
-            PrintLine(TEXT("word on place %i is %s"), i, *WordsFromHeader[i]);
-        }
-    }
+    PrintLine(TEXT("The HiddenWord is: %s."), *HiddenWord);// Debug Line 
+    PrintLine(TEXT("The number in list is : %i."), GetValidWords(WordsFromHeader).Num());
+    //GetValidWords();
 }
+
 
 void UBullCowCartridge::OnInput(const FString& Input) // When the player hits enter
 {
@@ -139,3 +133,40 @@ bool UBullCowCartridge::IsIsogram(FString Word) const
     // Until we reach [Word.Len() -1].
     // if any are the same return false.   
 }
+
+TArray<FString> UBullCowCartridge::GetValidWords(TArray<FString> WordList) const
+{
+    TArray<FString> ValidWords;
+    // int32 i = 0; i < WordList.Num(); i++
+    // WordsFromHeader[i] umjesto Word unutar for petlje
+    for (FString Word : WordList)
+    {
+        //if (WordsFromHeader[i].Len() >= 4 && WordsFromHeader[i].Len() <= 8)
+        if (Word.Len() >= 4 && Word.Len() <= 8 && IsIsogram(Word))
+        {
+            ValidWords.Emplace(Word);
+            //PrintLine(TEXT("word on place %i is %s"), i, *WordsFromHeader[i]);
+        }
+    }
+    return ValidWords;
+}
+
+//void UBullCowCartridge::GetValidWords()
+//{
+//    PrintLine(TEXT("The number of possible words is: %i."), WordsFromHeader.Num());
+//
+//    for (int32 i = 0; i != 10; i++)
+//    {
+//        //if (WordsFromHeader[i].Len() >= 4 && WordsFromHeader[i].Len() <= 8)
+//        if (WordsFromHeader[i].Len() == 5 && IsIsogram(WordsFromHeader[i]))
+//        {
+//            ValidWords.Emplace(WordsFromHeader[i]);
+//            //PrintLine(TEXT("word on place %i is %s"), i, *WordsFromHeader[i]);
+//        }
+//    }
+//
+//    for (int32 i = 0; i < ValidWords.Num(); i++)
+//    {
+//        PrintLine(TEXT("word is %s"), *ValidWords[i]);
+//    }
+//}
