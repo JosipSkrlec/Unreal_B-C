@@ -20,12 +20,13 @@ void UBullCowCartridge::BeginPlay() // When the game starts
     // TESTS
     PrintLine(TEXT("The number of possible words is: %i."), WordsFromHeader.Num());
 
-    for (int32 i = 0; i < 5; i++)
+    for (int32 i = 0; i != 10; i++)
     {
-        PrintLine(TEXT("word on place %i is %s"), i, *WordsFromHeader[i]);
+        if (WordsFromHeader[i].Len() >= 4 && WordsFromHeader[i].Len() <= 8)
+        {
+            PrintLine(TEXT("word on place %i is %s"), i, *WordsFromHeader[i]);
+        }
     }
-
-
 }
 
 void UBullCowCartridge::OnInput(const FString& Input) // When the player hits enter
