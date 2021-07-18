@@ -18,10 +18,14 @@ public:
 	void EndGame();
 	void ProcessGuess(FString Guess);
 	bool IsIsogram(FString Word) const;
+	//void GetValidWords();
+	TArray<FString> GetValidWords(TArray<FString>) const;
 
 	// Your declarations go below!
 private:
 	FString HiddenWord;
 	int32 Lives;
 	bool bGameOver;
+	TArray<FString> Words;
+	//TArray<FString> ValidWords;
 };
