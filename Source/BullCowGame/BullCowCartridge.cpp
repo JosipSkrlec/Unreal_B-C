@@ -23,7 +23,7 @@ void UBullCowCartridge::BeginPlay() // When the game starts
 }
 
 
-void UBullCowCartridge::OnInput(const FString& Input) // When the player hits enter
+void UBullCowCartridge::OnInput(const FString& PlayerInput) // When the player hits enter
 {
     if (bGameOver)
     {
@@ -32,7 +32,7 @@ void UBullCowCartridge::OnInput(const FString& Input) // When the player hits en
     }
     else // Checking PlayerGuess
     {
-        ProcessGuess(Input);
+        ProcessGuess(PlayerInput);
     }
 }
 
@@ -60,7 +60,7 @@ void UBullCowCartridge::EndGame()
     PrintLine(TEXT("\nPress enter to play again."));
 }
 
-void UBullCowCartridge::ProcessGuess(FString Guess)
+void UBullCowCartridge::ProcessGuess(const FString& Guess)
 {
     if (Guess == HiddenWord)
     {
@@ -134,7 +134,7 @@ bool UBullCowCartridge::IsIsogram(FString Word) const
     // if any are the same return false.   
 }
 
-TArray<FString> UBullCowCartridge::GetValidWords(TArray<FString> WordList) const
+TArray<FString> UBullCowCartridge::GetValidWords(const TArray<FString>& WordList) const
 {
     TArray<FString> ValidWords;
     // int32 i = 0; i < WordList.Num(); i++
