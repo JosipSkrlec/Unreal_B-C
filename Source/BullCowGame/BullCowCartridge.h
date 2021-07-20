@@ -17,15 +17,19 @@ public:
 	void SetupGame();
 	void EndGame();
 	void ProcessGuess(const FString& Guess);
-	bool IsIsogram(FString& Word) const;
+	bool IsIsogram(const FString& Word) const;
 	//void GetValidWords();
 	TArray<FString> GetValidWords(const TArray<FString>& WordList) const;
+	// ako stravimo int32& (da je referenca) a ne const tada znaci da ce oni biti output od te metode!!!
+	void GetBullCows(const FString& Guess, int32& BullCount, int32& CowCount) const; // const na kraju znaci da nece promjenti nista od navedenog (isisogram gameover....)
 
 	// Your declarations go below!
+	// member variables
 private:
 	FString HiddenWord;
 	int32 Lives;
 	bool bGameOver;
-	TArray<FString> Words;
+	TArray<FString> WordsFromTxtFile;
+	TArray<FString> Isograms;
 	//TArray<FString> ValidWords;
 };

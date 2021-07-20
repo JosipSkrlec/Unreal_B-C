@@ -9,17 +9,14 @@ void UBullCowCartridge::BeginPlay() // When the game starts
 {
     Super::BeginPlay();
 
-    GetValidWords(WordsFromHeader);
-
     // LECTURE 69. citanje iz TXT file-a
     const FString WordListPath = FPaths::ProjectContentDir() / TEXT("WordLists/HiddenWordList.txt");
-    FFileHelper::LoadFileToStringArray(Words, *WordListPath);
-    
-    SetupGame();
+    FFileHelper::LoadFileToStringArray(WordsFromTxtFile, *WordListPath);
 
-    PrintLine(TEXT("The HiddenWord is: %s."), *HiddenWord);// Debug Line 
-    PrintLine(TEXT("The number in list is : %i."), GetValidWords(WordsFromHeader).Num());
-    //GetValidWords();
+    // stavljamo rijeci unutra kako bi izbjegli pisanje dugog istog koda kasnije !!!
+    Isograms = GetValidWords(WordsFromHeader);
+
+    SetupGame();
 }
 
 
@@ -41,13 +38,18 @@ void UBullCowCartridge::SetupGame()
     // Welcoming The Player
     PrintLine(TEXT("Welcome to Bull Cows!"));
 
-    HiddenWord = TEXT("cakes");
+    //HiddenWord = TEXT("cakes");
+    //HiddenWord = GetValidWords(WordsFromHeader)[FMath::RandRange(0, GetValidWords(WordsFromHeader).Num() - 1)];
+    HiddenWord = Isograms[FMath::RandRange(0, Isograms.Num() - 1)];
     Lives = HiddenWord.Len();
     bGameOver = false;
 
     PrintLine(TEXT("Guess the %i letter word!"), HiddenWord.Len());
     PrintLine(TEXT("You have %i lives."), Lives);
     PrintLine(TEXT("Type in your guess and \npress enter to continue...")); // Prompt Player For Guess
+    PrintLine(TEXT("The HiddenWord is: %s."), *HiddenWord);// Debug Line 
+    //PrintLine(TEXT("The number in list is : %i."), GetValidWords(WordsFromHeader).Num() - 1);
+    //GetValidWords();
 
     // const TCHAR HW[] = TEXT("plums");
     // PrintLine(TEXT("Character 1 of the hidden word is: %c"), HiddenWord[0]); // print "c"
@@ -97,11 +99,18 @@ void UBullCowCartridge::ProcessGuess(const FString& Guess)
         return;
     }
 
+    // ovdje vidimo da smo deklarirali 2 varijable ali ih nismo inicijalizirali
+    // to nam je znak da ce one biti out parametri od metode!!!
+    int32 Bulls, Cows;
+    GetBullCows(Guess, Bulls, Cows);
+
+    PrintLine(TEXT("Yout have %i Bulls and %i Cows"), Bulls, Cows);
+
     // Show the player Bulls and Cows
     PrintLine(TEXT("Guess again, you have %i lives left"), Lives);
 }
 
-bool UBullCowCartridge::IsIsogram(FString Word) const
+bool UBullCowCartridge::IsIsogram(const FString& Word) const
 {
     // int32 Index = 0;
     // int32 Comparison = Index + 1;
@@ -137,19 +146,42 @@ bool UBullCowCartridge::IsIsogram(FString Word) const
 TArray<FString> UBullCowCartridge::GetValidWords(const TArray<FString>& WordList) const
 {
     TArray<FString> ValidWords;
-    // int32 i = 0; i < WordList.Num(); i++
-    // WordsFromHeader[i] umjesto Word unutar for petlje
+
     for (FString Word : WordList)
     {
-        //if (WordsFromHeader[i].Len() >= 4 && WordsFromHeader[i].Len() <= 8)
         if (Word.Len() >= 4 && Word.Len() <= 8 && IsIsogram(Word))
         {
             ValidWords.Emplace(Word);
-            //PrintLine(TEXT("word on place %i is %s"), i, *WordsFromHeader[i]);
         }
     }
     return ValidWords;
 }
+
+void UBullCowCartridge::GetBullCows(const FString& Guess, int32& BullCount, int32& CowCount) const
+{
+    BullCount = 0;
+    CowCount = 0;
+
+    // if the index guess is same as index hidden, bullcount++
+    // if not a bull was it a cow if yes CawCount++
+    for (int32 GuessIndex = 0; GuessIndex < Guess.Len(); GuessIndex++)
+    {
+        if (Guess[GuessIndex] == HiddenWord[GuessIndex])
+        {
+            BullCount++;
+            continue;
+        }
+
+        for (int32 HiddenIndex = 0; HiddenIndex < HiddenWord.Len(); HiddenIndex++)
+        {
+            if (Guess[GuessIndex] == HiddenWord[HiddenIndex])
+            {
+                CowCount++;
+            }
+        }
+    }
+}
+
 
 //void UBullCowCartridge::GetValidWords()
 //{
