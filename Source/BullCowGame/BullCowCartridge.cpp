@@ -9,6 +9,11 @@ void UBullCowCartridge::BeginPlay() // When the game starts
 {
     Super::BeginPlay();
 
+    //FBullCowCount Count = {2, 4};
+    //Count.Bulls = 3;
+    //Count.Cows = 2;
+    //PrintLine(TEXT("Bulls = %i , Cows = %i"), Count.Bulls, Count.Cows);
+
     // LECTURE 69. citanje iz TXT file-a
     const FString WordListPath = FPaths::ProjectContentDir() / TEXT("WordLists/HiddenWordList.txt");
     FFileHelper::LoadFileToStringArray(WordsFromTxtFile, *WordListPath);
@@ -101,10 +106,13 @@ void UBullCowCartridge::ProcessGuess(const FString& Guess)
 
     // ovdje vidimo da smo deklarirali 2 varijable ali ih nismo inicijalizirali
     // to nam je znak da ce one biti out parametri od metode!!!
-    int32 Bulls, Cows;
-    GetBullCows(Guess, Bulls, Cows);
+    //int32 Bulls, Cows;
+    //GetBullCows(Guess);
 
-    PrintLine(TEXT("Yout have %i Bulls and %i Cows"), Bulls, Cows);
+    FBullCowCount Score = GetBullCows(Guess);
+
+    PrintLine(TEXT("Yout have %i Bulls and %i Cows"), Score.Bulls, Score.Cows);
+    //PrintLine(TEXT("Yout have %i Bulls and %i Cows"), Bulls, Cows);
 
     // Show the player Bulls and Cows
     PrintLine(TEXT("Guess again, you have %i lives left"), Lives);
@@ -134,7 +142,7 @@ bool UBullCowCartridge::IsIsogram(const FString& Word) const
     //    }
     //}
 
-    return true;
+    //return true;
 
     // For each letter. 
     // Start at element [0].
@@ -157,10 +165,9 @@ TArray<FString> UBullCowCartridge::GetValidWords(const TArray<FString>& WordList
     return ValidWords;
 }
 
-void UBullCowCartridge::GetBullCows(const FString& Guess, int32& BullCount, int32& CowCount) const
+FBullCowCount UBullCowCartridge::GetBullCows(const FString& Guess) const
 {
-    BullCount = 0;
-    CowCount = 0;
+    FBullCowCount Count;
 
     // if the index guess is same as index hidden, bullcount++
     // if not a bull was it a cow if yes CawCount++
@@ -168,7 +175,8 @@ void UBullCowCartridge::GetBullCows(const FString& Guess, int32& BullCount, int3
     {
         if (Guess[GuessIndex] == HiddenWord[GuessIndex])
         {
-            BullCount++;
+            //BullCount++;
+            Count.Bulls++;
             continue;
         }
 
@@ -176,10 +184,15 @@ void UBullCowCartridge::GetBullCows(const FString& Guess, int32& BullCount, int3
         {
             if (Guess[GuessIndex] == HiddenWord[HiddenIndex])
             {
-                CowCount++;
+ /*               CowCount++;*/
+                Count.Cows++;
+                break;
+                // da je tu continue;
             }
-        }
-    }
+        }// tada bi skocio tu contnue u unutarnjoj for petlji!
+    }// continue skoèi tu // break od unutarnje isto skoci tu!
+
+    return Count;
 }
 
 
